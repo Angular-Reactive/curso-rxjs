@@ -1,4 +1,11 @@
-import { Observable } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
+
+
+const observer: Observer<string> = {
+    next: value => console.log('siguiente [next]: ', value),
+    error: error => console.error('error [obs]: ', error),
+    complete: () => console.info('complete [obs]')
+}
 
 // Para crear Observables hay diversas formas:
 
@@ -18,5 +25,12 @@ const obs$ = new Observable<string>(subs => {
     subs.next('Mundo');
 });
 
-// Imprimir los datos recibidos en consola
-obs$.subscribe( console.log);
+// 2) Segunda forma
+// obs$.subscribe(
+//     valor => console.log('next: ', valor), 
+//     error => console.warn('error: ', error),
+//     () => console.info('complete')
+// );
+
+// 3) A traves del Observer
+obs$.subscribe(observer);

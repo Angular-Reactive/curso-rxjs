@@ -1,4 +1,4 @@
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, Subject } from 'rxjs';
 
 
 const observer: Observer<string> = {
@@ -7,43 +7,26 @@ const observer: Observer<string> = {
     complete: () => console.info('complete [obs]')
 }
 
-const intervalo$ = new Observable<number>(subscriber => {
+const intervalo$ = new Observable<number>( subs => {
 
-    // Crear un contador, 1, 2, 3, 4, 5, ....
-    let contador = 0;
-    
-    const interval = setInterval( () => {
-        // Cada segundo
-        subscriber.next(contador++);
-        console.log(contador);
-    }, 1000);
+    const intervalID = setInterval(
+        () => subs.next(Math.random()),
+    3000);
 
-    setTimeout(() => {
-        subscriber.complete();
-    }, 2500);
-
-    // Sera lo que se ejecutara cuando se llame el metodo subscribe()
-    return () => {
-        // Limpiar el intervalo
-        clearInterval(interval);
-        console.log('Intervalo destruido');
-    }
+    return () => clearInterval(intervalID);
 });
 
-const subs1 = intervalo$.subscribe();
+/**
+ * Las tres caracteristicas principales del Subject son:
+ * 1- Casteo multiple (multicasting)
+ * 2- Tambien es un Observer
+ * 3- Contiene los metodos next(), error() y complete().
+ */
+const subject$ = new Subject<number>();
+intervalo$.subscribe(subject$);
 
-const subs2 = intervalo$.subscribe();
+// const subs1 = intervalo$.subscribe();
+// const subs2 = intervalo$.subscribe();
 
-const subs3 = intervalo$.subscribe();
-
-// Encadenando subscripciones
-subs1.add(subs2)
-    .add(subs3);
-
-setTimeout( () => {
-    subs1.unsubscribe();
-    // subs2.unsubscribe();
-    // subs3.unsubscribe();
-
-    console.log('Timeout completado');
-}, 6000);
+const subs1 = subject$.subscribe(rnd => console.log('subs1', rnd));
+const subs2 = subject$.subscribe(rnd => console.log('subs2', rnd));

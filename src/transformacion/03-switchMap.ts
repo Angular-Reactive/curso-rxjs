@@ -1,8 +1,8 @@
-import { GithubUser } from './interfaces/github-user.interface';
+import { GithubUser } from '../interfaces/github-user.interface';
 import { ajax } from 'rxjs/ajax';
 import { Observable, fromEvent } from 'rxjs';
 import { debounceTime, map, pluck, mergeAll, mergeMap, last, switchMap } from 'rxjs/operators';
-import { GithubUsersResp } from './interfaces/github-users.interface';
+import { GithubUsersResp } from '../interfaces/github-users.interface';
 
 // Referencias
 const body = document.querySelector('body');
